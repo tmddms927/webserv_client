@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <stdio.h>
 #define PORT 80
 
     int main(int argc, char const * argv[])
@@ -24,7 +25,7 @@
         address.sin_family = AF_INET;
         address.sin_port = htons(PORT);
 
-        inet = inet_pton(AF_INET, "10.19.224.112", &address.sin_addr); //IP주소를 binary형식으로 변경
+        inet = inet_pton(AF_INET, "10.19.225.197", &address.sin_addr); //IP주소를 binary형식으로 변경
         //inet = inet_pton(AF_INET, "127.0.0.1", &address.sin_addr); //IP주소를 binary형식으로 변경
         if(inet <= 0)
         {
@@ -40,13 +41,30 @@
         }
 
 //3. server와 통신
+        char buf[1000];
         std::string msg;
-        for (int i = 1; i < argc; i++) {
-            msg += argv[i];
+        while (1) {
+            //std::cin >> msg;
+            std::fgets(buf, 1000, stdin);
+            int i = 0;
+            while (buf[i])
+            {
+                if (buf[i] == '*' && buf[i + 1] == '*'){
+                    buf[i] = '\r';
+                    buf[i + 1] = '\n';
+                }
+                i++;
+            }
+            std::cout << buf << std::endl;
+            send(sock, buf, strlen(buf), 0);
+            valread = read(sock, buffer, 10000);
+            msg = buffer;
+            int end = msg.find("*");
+            if (end != std::string::npos)
+                break;
+            std::memset(buf, 0, strlen(buf));
+            printf("from server : %s\n", buffer);
+
         }
-        std::cout << msg << std::endl;
-        send(sock, msg.c_str(), strlen(msg.c_str()), 0);
-        valread = read(sock, buffer, 10000);
-        printf("from server : %s\n", buffer);
         return 0;
     }
