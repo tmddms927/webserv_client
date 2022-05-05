@@ -27,8 +27,8 @@
         address.sin_family = AF_INET;
         address.sin_port = htons(PORT);
 
-        inet = inet_pton(AF_INET, "10.19.225.197", &address.sin_addr); //IP주소를 binary형식으로 변경
-        // inet = inet_pton(AF_INET, "127.0.0.1", &address.sin_addr); //IP주소를 binary형식으로 변경
+        // inet = inet_pton(AF_INET, "10.19.225.197", &address.sin_addr); //IP주소를 binary형식으로 변경
+        inet = inet_pton(AF_INET, "127.0.0.1", &address.sin_addr); //IP주소를 binary형식으로 변경
         if(inet <= 0)
         {
             printf("inet_pton error\n");
